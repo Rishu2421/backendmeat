@@ -286,46 +286,52 @@ module.exports.cashOnDelivery = async (req, res) => {
 
          if (order) {
             // Replace with your actual chat ID
-            const orderedItems = order.items.map((item) => `${item.quantity} x ${item.item.name} \n selectedQuantity: ${item.selectedQuantityAndMrp}`).join('\n');
-    
-            const message = `New order placed!\nOrder ID: ${order._id}\nOrder Total Amount: ${order.amount}\n\n` +
-            `User Name: ${name}\n` +
-            `User Address: ${address} ${pincode}\n` +
-            `User Mobile Number: ${mobileNumber}\n\n` +
-            `Ordered Items:\n${orderedItems}\n`+
-            `Payment Type : Cash On delievery`;
+            // const orderedItems = order.items.map((item) => `${item.quantity} x ${item.item.name} \n selectedQuantity: ${item.selectedQuantityAndMrp}`).join('\n');
+   
+   ///////////// uncomment this part for telegram logic ///////////////
+
+
+            // const message = `New order placed!\nOrder ID: ${order._id}\nOrder Total Amount: ${order.amount}\n\n` +
+            // `User Name: ${name}\n` +
+            // `User Address: ${address} ${pincode}\n` +
+            // `User Mobile Number: ${mobileNumber}\n\n` +
+            // `Ordered Items:\n${orderedItems}\n`+
+            // `Payment Type : Cash On delievery`;
 
             
     // sendTelegramMessage(chatId, message);
 
+    // telegram logic end  ///////////
 
-    const receiptText = `
-    Payment Confirmation
-    Order ID: ${order._id}
-    User Name: ${name}
-    User Address: ${address} ${pincode}
-    User Mobile Number: ${mobileNumber}
-    Ordered Items:
-    ${orderedItems}
-    OrderAmount:${order.amount}
-    Payment Type: Cash On Delivery
-  `;
+// =--------------Uncomment this part to print receipt on printer //////////////////////////////////-------------->
+  //   const receiptText = `
+  //   Payment Confirmation
+  //   Order ID: ${order._id}
+  //   User Name: ${name}
+  //   User Address: ${address} ${pincode}
+  //   User Mobile Number: ${mobileNumber}
+  //   Ordered Items:
+  //   ${orderedItems}
+  //   OrderAmount:${order.amount}
+  //   Payment Type: Cash On Delivery
+  // `;
 
-  const printer = new ThermalPrinter({
-    // type: PrinterTypes.EPSON, // Replace with the appropriate printer type if needed
-    type: PrinterTypes.EPSON, // Use CUSTOM type
-    interface: "Microsoft Print to Pdf", // Replace with your printer's interface
-    options: {
-      timeout: 5000, // Set a suitable timeout
-    },
-  });
-  console.log(printer.isPrinterConnected())
-  // await printer.init();
-  printer.alignCenter();
-  printer.print (receiptText);
-  printer.cut();
-  await printer.execute();
+  // const printer = new ThermalPrinter({
+  //   // type: PrinterTypes.EPSON, // Replace with the appropriate printer type if needed
+  //   type: PrinterTypes.EPSON, // Use CUSTOM type
+  //   interface: "Microsoft Print to Pdf", // Replace with your printer's interface
+  //   options: {
+  //     timeout: 5000, // Set a suitable timeout
+  //   },
+  // });
+  // console.log(printer.isPrinterConnected())
+  // // await printer.init();
+  // printer.alignCenter();
+  // printer.print (receiptText);
+  // printer.cut();
+  // await printer.execute();
 
+  ///////////////////////////////////////////////// printer logic end///////////
           return res.status(200).json({
             success: true,
              paymentMethod:"CashOnDelivery",
