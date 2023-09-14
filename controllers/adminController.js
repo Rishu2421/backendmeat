@@ -67,6 +67,8 @@ module.exports.authenticate = async (req, res) => {
       subcategory,
       isTopSelling,
       isBoneless,
+      isMarinade,
+      isRawMenu
     } = req.body;
     const image = req.file ? `/uploads/${req.file.filename}` : 'notprovided';
 
@@ -84,6 +86,8 @@ module.exports.authenticate = async (req, res) => {
       subcategory,
       isTopSelling,
       isBoneless,
+      isMarinade,
+      isRawMenu
     });
 
     // Save the new item to the database

@@ -3,6 +3,11 @@ const Razorpay = require('razorpay');
 const path = require('path');
 const crypto = require('crypto');
 const Order = require('../models/orders');
+
+const {ThermalPrinter} = require("node-thermal-printer");
+const PrinterTypes = require("node-thermal-printer").types;
+
+
 dotenv.config({ path: path.join(__dirname, '..', 'config', 'config.env') });
 const { User } = require('../models/userModel');
 const Item = require('../models/Item');
@@ -166,8 +171,37 @@ module.exports.savePaymentDetails=async (req,res)=> {
             `User Mobile Number: ${mobileNumber}\n\n` +
             `Ordered Items:\n${orderedItems}\n`+
             `Payment Type : Online paid Payment Id ${razorpay_order_id}`;
-   
             // sendTelegramMessage(chatId, message);
+
+
+            const receiptText = `
+        Payment Confirmation
+        Order ID: ${order._id}
+        User Name: ${name}
+        User Address: ${address} ${pincode}
+        User Mobile Number: ${mobileNumber}
+        Ordered Items:
+        ${orderedItems}
+        OrderAmount:${order.amount}
+        Payment Type: Online paid Payment Id ${razorpay_order_id}
+      `;
+
+      const printer = new ThermalPrinter({
+        // type: PrinterTypes.EPSON, // Replace with the appropriate printer type if needed
+        type: PrinterTypes.CUSTOM, // Use CUSTOM type
+        interface: "Microsoft Print to Pdf", // Replace with your printer's interface
+        options: {
+          timeout: 5000, // Set a suitable timeout
+        },
+      });
+console.log("kchb b g nbn ygcb b k"+printer+"jhkjbn j ")
+      await printer.init();
+      printer.alignCenter();
+      printer.text(receiptText);
+      printer.cut();
+      await printer.execute();
+
+
           return res.status(200).json({
             success: true,
             token,
@@ -263,6 +297,35 @@ module.exports.cashOnDelivery = async (req, res) => {
 
             
     // sendTelegramMessage(chatId, message);
+
+
+    const receiptText = `
+    Payment Confirmation
+    Order ID: ${order._id}
+    User Name: ${name}
+    User Address: ${address} ${pincode}
+    User Mobile Number: ${mobileNumber}
+    Ordered Items:
+    ${orderedItems}
+    OrderAmount:${order.amount}
+    Payment Type: Cash On Delivery
+  `;
+
+  const printer = new ThermalPrinter({
+    // type: PrinterTypes.EPSON, // Replace with the appropriate printer type if needed
+    type: PrinterTypes.EPSON, // Use CUSTOM type
+    interface: "Microsoft Print to Pdf", // Replace with your printer's interface
+    options: {
+      timeout: 5000, // Set a suitable timeout
+    },
+  });
+  console.log(printer.isPrinterConnected())
+  // await printer.init();
+  printer.alignCenter();
+  printer.print (receiptText);
+  printer.cut();
+  await printer.execute();
+
           return res.status(200).json({
             success: true,
              paymentMethod:"CashOnDelivery",

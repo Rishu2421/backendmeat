@@ -47,6 +47,27 @@ exports.getItemsName = (req, res) => {
     });
   };
 
+  exports.getMarinadeItem = async (req, res) => {
+    Item.find({ isMarinade: true })
+    .then((products) => {
+      res.json(products);
+    })
+    .catch((error) => {
+      console.error('Error fetching Boneless products:', error);
+      res.status(500).json({ error: 'An error occurred while fetching Boneless products.' });
+    });
+  };
+
+  exports.getRawMenuItem = async (req, res) => {
+    Item.find({ isRawMenu: true })
+    .then((products) => {
+      res.json(products);
+    })
+    .catch((error) => {
+      console.error('Error fetching Boneless products:', error);
+      res.status(500).json({ error: 'An error occurred while fetching Boneless products.' });
+    });
+  };
   exports.getProductsByIds = async (req, res) => {
     try {
       const itemIds = req.query.ids.split(',');

@@ -15,7 +15,9 @@ const itemSchema = new mongoose.Schema({
   category: { type: String, required: true },
   subcategory: { type: String },
   isTopSelling: { type: Boolean, required: true },
-  isBoneless: { type: Boolean, default: false },
+  isBoneless: { type: Boolean, default: false }, 
+  isMarinade: { type: Boolean, default: false },
+  isRawMenu:{ type: Boolean, default: false },
 }, {
   strictPopulate: false // Set strictPopulate to false
 });

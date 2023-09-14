@@ -9,6 +9,8 @@ router.get("", productController.getProductsByIds);
 
 router.get('/topselling', productController.getTopSellingProducts);
 router.get('/boneless', productController.getBonelessItems);
+router.get('/marinade', productController.getMarinadeItem);
+router.get('/rawmenu', productController.getRawMenuItem);
 router.get('/itemsName', productController.getItemsName);
 router.get('/allproducts', productController.getProducts);
 router.get('/category/:category', productController.getProductsByCategory);

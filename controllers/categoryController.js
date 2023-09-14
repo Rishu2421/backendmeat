@@ -74,6 +74,7 @@ module.exports.deleteCategory = async (req, res) => {
       // Delete the entire category
        if (category.imageUrl) {
       const imagePath = path.join(__dirname, '..', 'public', category.imageUrl);
+      console.log(imagePath)
       fs.unlink(imagePath, (error) => {
         if (error) {
           console.error('Error deleting category image file:', error);
