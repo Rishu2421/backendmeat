@@ -20,7 +20,7 @@ const app = require('./app');
 //   });
 
 
-// Connect to MongoDB
+// Connect to MongoD
 mongoose.connect('mongodb://localhost:27017/metagram', {
   useNewUrlParser: true,
   useUnifiedTopology: true,

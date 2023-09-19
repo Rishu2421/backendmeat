@@ -5,6 +5,7 @@ router.post('/register', userController.registerUser);
 
 // Route to handle user login
 router.post('/login', userController.loginUser);
+router.post('/login-with-facebook', userController.facebookLogin);
 
 
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
