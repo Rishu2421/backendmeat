@@ -25,7 +25,7 @@ router.get(
     //   };
   
       // Redirect to the frontend route with the token and user data as query parameters
-      res.redirect(`/?token=${token}&userId=${userId}`);
+      res.redirect(`http://localhost:3000/?token=${token}&userId=${userId}`);
     }
   );
 // router.route('/signup')
