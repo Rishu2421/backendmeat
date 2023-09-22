@@ -1,6 +1,7 @@
 // controllers/orderController.js
 
 const Order = require('../models/orders');
+const emailController = require('../config/email-setup');
 
 // Get user's orders
 exports.getUserOrders = async (req, res) => {
@@ -41,5 +42,56 @@ exports.updateOrderStatus = async (req, res) => {
   } catch (error) {
     console.error('Error updating order status:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+// Controller function to cancel an order
+exports.cancelOrder = async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    const user = req.user;
+    
+    // Find the order by ID and check if it belongs to the authenticated user
+    const order = await Order.findById(orderId).populate('items.item');
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found.' });
+    }
+console.log(order)
+   
+    // Implement order cancellation logic here
+    // For example, set the order status to 'canceled' and update the database
+
+   
+    const orderDetails = {
+      name: order.name, // User's name
+      orderID: order._id, // Order ID
+      canceledItems: order.items.map((item) => ({
+        name: item.item.name, // Product name
+        price: item.selectedQuantityAndMrp.mrp, // Product price
+        quantity: item.quantity, // Quantity of the product
+      })),
+      orderAmount: order.amount, // Total order amount
+      paymentType: 'Cash On Delivery', // Payment method (you can modify this based on your application)
+     address: `${order.address} ${order.pincode}`,
+     userEmail:user.email,
+     paymentType:order.isCashOnDelivery?"Cash On Delivery": "Online Paid Check for refund."
+      // Add any additional order details here as needed
+    };
+    await emailController.sendOrderCancellationEmails(
+      user.email,
+      'chersmeatgram@gmail.com',
+      orderDetails
+      ,
+       // Add more order details
+    );
+     // Respond with a success message
+     order.status = 'Cancelled';
+     await order.save();
+    res.status(200).json({ message: 'Order has been canceled successfully.' });
+  } catch (error) {
+    console.error('Error canceling order:', error);
+    res.status(500).json({ message: 'An error occurred while canceling the order.' });
   }
 };

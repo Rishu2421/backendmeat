@@ -31,7 +31,7 @@ app.use(
     saveUninitialized: false,
   })
 );
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001','https://meatgram.rstechnologyandbusinessconsultants.com/','https://chersmeatgram.com'];
 
 app.use(cors({
   origin: allowedOrigins,

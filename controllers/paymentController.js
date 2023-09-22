@@ -3,9 +3,9 @@ const Razorpay = require('razorpay');
 const path = require('path');
 const crypto = require('crypto');
 const Order = require('../models/orders');
-
-const {ThermalPrinter} = require("node-thermal-printer");
-const PrinterTypes = require("node-thermal-printer").types;
+const emailController = require('../config/email-setup');
+// const {ThermalPrinter} = require("node-thermal-printer");
+// const PrinterTypes = require("node-thermal-printer").types;
 
 
 dotenv.config({ path: path.join(__dirname, '..', 'config', 'config.env') });
@@ -186,20 +186,20 @@ module.exports.savePaymentDetails=async (req,res)=> {
         Payment Type: Online paid Payment Id ${razorpay_order_id}
       `;
 
-      const printer = new ThermalPrinter({
-        // type: PrinterTypes.EPSON, // Replace with the appropriate printer type if needed
-        type: PrinterTypes.CUSTOM, // Use CUSTOM type
-        interface: "Microsoft Print to Pdf", // Replace with your printer's interface
-        options: {
-          timeout: 5000, // Set a suitable timeout
-        },
-      });
-console.log("kchb b g nbn ygcb b k"+printer+"jhkjbn j ")
-      await printer.init();
-      printer.alignCenter();
-      printer.text(receiptText);
-      printer.cut();
-      await printer.execute();
+//       const printer = new ThermalPrinter({
+//         // type: PrinterTypes.EPSON, // Replace with the appropriate printer type if needed
+//         type: PrinterTypes.CUSTOM, // Use CUSTOM type
+//         interface: "Microsoft Print to Pdf", // Replace with your printer's interface
+//         options: {
+//           timeout: 5000, // Set a suitable timeout
+//         },
+//       });
+// console.log("kchb b g nbn ygcb b k"+printer+"jhkjbn j ")
+//       await printer.init();
+//       printer.alignCenter();
+//       printer.text(receiptText);
+//       printer.cut();
+//       await printer.execute();
 
 
           return res.status(200).json({
@@ -304,32 +304,60 @@ module.exports.cashOnDelivery = async (req, res) => {
     // telegram logic end  ///////////
 
 // =--------------Uncomment this part to print receipt on printer //////////////////////////////////-------------->
-    const receiptText = `
-    Payment Confirmation
-    Order ID: ${order._id}
-    User Name: ${name}
-    User Address: ${address} ${pincode}
-    User Mobile Number: ${mobileNumber}
-    Ordered Items:
-    ${orderedItems}
-    OrderAmount:${order.amount}
-    Payment Type: Cash On Delivery
-  `;
+  //   const receiptText = `
+  //   Payment Confirmation
+  //   Order ID: ${order._id}
+  //   User Name: ${name}
+  //   User Address: ${address} ${pincode}
+  //   User Mobile Number: ${mobileNumber}
+  //   Ordered Items:
+  //   ${orderedItems}
+  //   OrderAmount:${order.amount}
+  //   Payment Type: Cash On Delivery
+  // `;
 
-  const printer = new ThermalPrinter({
-    // type: PrinterTypes.EPSON, // Replace with the appropriate printer type if needed
-    type: PrinterTypes.EPSON, // Use CUSTOM type
-    interface: "192.168.1.23:USB001", // Replace with your printer's interface
-    options: {
-      timeout: 5000, // Set a suitable timeout
-    },
-  });
-  console.log(printer.isPrinterConnected())
-  // await printer.init();
-  printer.alignCenter();
-  printer.print (receiptText);
-  printer.cut();
-  await printer.execute();
+  // const printer = new ThermalPrinter({
+  //   // type: PrinterTypes.EPSON, // Replace with the appropriate printer type if needed
+  //   type: PrinterTypes.EPSON, // Use CUSTOM type
+  //   interface: "192.168.1.4:USB004", // Replace with your printer's interface
+  //   options: {
+  //     timeout: 5000, // Set a suitable timeout
+  //   },
+  // });
+  // console.log(printer.isPrinterConnected())
+  // // await printer.init();
+  // printer.alignCenter();
+  // printer.print (receiptText);
+  // printer.cut();
+  // await printer.execute();
+
+// =================Email Controller=======================
+
+  const orderDetails = {
+    name: name,
+    userEmail:user.email,
+    address: `${address} ${pincode}`,
+    mobileNumber: mobileNumber,
+    orderedItems: order.items.map((item) => {
+      return {
+        name: item.item.name,
+        price: item.item.price,
+        quantity: item.quantity,
+        selectedQuantityAndMrp: item.selectedQuantityAndMrp,
+      };
+    }),
+
+    orderAmount: order.amount,
+    paymentType: 'Cash On Delivery',
+    orderID: order._id,
+  };
+  await emailController.sendOrderConfirmationEmails(
+    user.email,
+    'chersmeatgram@gmail.com',
+    orderDetails
+    ,
+     // Add more order details
+  );
 
   ///////////////////////////////////////////////// printer logic end///////////
           return res.status(200).json({

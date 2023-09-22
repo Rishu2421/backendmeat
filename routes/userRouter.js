@@ -1,9 +1,10 @@
 const router = require('express').Router();
 const userController = require('../controllers/userController')
 const passport = require('../config/passport-setup');
-router.post('/register', userController.registerUser);
+
 
 // Route to handle user login
+router.post('/register', userController.registerUser);
 router.post('/login', userController.loginUser);
 router.post('/login-with-facebook', userController.facebookLogin);
 
@@ -18,20 +19,9 @@ router.get(
       // Generate the JWT token
       const token = req.user.generateJWT();
         const userId=req.user._id;
-      // Get the user data
-    //   const userData = {
-    //     email: req.user.email,
-    //     orders: req.user.orders,
-    //     // Add other fields as needed
-    //   };
-  
-      // Redirect to the frontend route with the token and user data as query parameters
-      res.redirect(`http://localhost:3000/?token=${token}&userId=${userId}`);
+    res.redirect(`https://meatgram.rstechnologyandbusinessconsultants.com/?token=${token}&userId=${userId}`);
     }
   );
-// router.route('/signup')
-//     .post(signUp);
-// router.route('/signup/verify')
-//     .post(verifyOtp);
+
 
 module.exports = router
