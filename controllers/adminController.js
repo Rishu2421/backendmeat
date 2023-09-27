@@ -243,3 +243,75 @@ module.exports.removeBanner = async (req, res) => {
     
   }
 };
+
+
+// Function to update a product
+exports.updateProduct = async (req, res) => {
+  upload.single('image')(req, res, async function (err) {
+    try {
+      if (err) {
+        console.error('Error uploading file:', err);
+        return res.status(500).json({ error: 'Failed to upload file' });
+      }
+
+      const productId = req.params.productId;
+      const updatedProductData =JSON.parse(req.body.product);
+console.log(req.body)
+      // Check if a new image file was uploaded
+      if (req.file) {
+        // Delete the old image file, if it exists
+        const existingProduct = await Item.findById(productId);
+        if (existingProduct && existingProduct.image) {
+          const imagePath = path.join(__dirname, '..', 'public', existingProduct.image);
+          fs.unlink(imagePath, (error) => {
+            if (error) {
+              console.error('Error deleting old image file:', error);
+            }
+          });
+        }
+
+        // Update the image field with the path to the new image
+        updatedProductData.image = `/uploads/${req.file.filename}`;
+      }
+
+      // Find and update the product
+      const updatedProduct = await Item.findByIdAndUpdate(productId, updatedProductData, {
+        new: true,
+      });
+console.log(updatedProduct)
+      if (!updatedProduct) {
+        console.error('Product not found for ID:', productId);
+        return res.status(404).json({ message: 'Product not found' });
+      }
+
+      res.status(200).json(updatedProduct);
+    } catch (error) {
+      console.error('Error updating product:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+};
+
+
+
+
+// exports.updateProduct = async (req, res) => {
+//   try {
+//     const productId = req.body._id;
+//     const updatedProductData = req.body;
+//     console.log(req.body)
+
+//     const updatedProduct = await Item.findByIdAndUpdate(productId, updatedProductData, {
+//       new: true, // Return the updated product
+//     });
+
+//     if (!updatedProduct) {
+//       return res.status(404).json({ message: 'Product not found' });
+//     }
+
+//     res.status(200).json(updatedProduct);
+//   } catch (error) {
+//     console.error('Error updating product:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };

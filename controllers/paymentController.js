@@ -242,6 +242,10 @@ module.exports.cashOnDelivery = async (req, res) => {
       userId,
       amount,
       pincode,
+      isOrderForLater, // New field for preorder
+      deliveryDate, // New field for delivery date
+      deliveryTimeSlot, 
+
 
     } = req.body;
 
@@ -274,6 +278,9 @@ module.exports.cashOnDelivery = async (req, res) => {
       pincode,
       isCashOnDelivery: true,
       items,
+       isOrderForLater, // Include the isOrderForLater flag
+      deliveryDate, // Include the delivery date
+      deliveryTimeSlot, // Include the delivery time slot
     });
 
     // Remove purchased items from the user's cart
@@ -286,7 +293,7 @@ module.exports.cashOnDelivery = async (req, res) => {
 
          if (order) {
             // Replace with your actual chat ID
-            const orderedItems = order.items.map((item) => `${item.quantity} x ${item.item.name} \n selectedQuantity: ${item.selectedQuantityAndMrp}`).join('\n');
+            // const orderedItems = order.items.map((item) => `${item.quantity} x ${item.item.name} \n selectedQuantity: ${item.selectedQuantityAndMrp}`).join('\n');
    
    ///////////// uncomment this part for telegram logic ///////////////
 
@@ -350,7 +357,9 @@ module.exports.cashOnDelivery = async (req, res) => {
     orderAmount: order.amount,
     paymentType: 'Cash On Delivery',
     orderID: order._id,
+    
   };
+
   await emailController.sendOrderConfirmationEmails(
     user.email,
     'chersmeatgram@gmail.com',

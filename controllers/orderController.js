@@ -46,6 +46,28 @@ exports.updateOrderStatus = async (req, res) => {
 };
 
 
+exports.getTodayOrders = async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set the time to the beginning of the day
+
+    // Fetch orders placed today or scheduled for today for admin users
+    const orders = await Order.find({
+      $or: [
+        { createdAt: { $gte: today } }, // Orders placed today
+        { isOrderForLater: true, deliveryDate: { $gte: today } }, // Preorders scheduled for today
+      ],
+    }).sort({ createdAt: -1 }).populate('items.item'); // Sort orders by createdAt in descending order to get the latest orders first
+
+    res.status(200).json({ success: true, orders });
+  } catch (error) {
+    console.error('Error fetching today\'s orders:', error);
+    res.status(500).json({ success: false, error: 'Error fetching today\'s orders' });
+  }
+};
+
+
+
 // Controller function to cancel an order
 exports.cancelOrder = async (req, res) => {
   try {

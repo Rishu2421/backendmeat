@@ -62,8 +62,8 @@ function generateOrderConfirmationEmail(orderDetails) {
       (item) => `
         <tr>
             <td>${item.name}</td>
-            <td>${item.selectedQuantityAndMrp.mrp}</td>
             <td>${item.quantity}</td>
+            <td>${item.selectedQuantityAndMrp.mrp}</td>
         </tr>
         `
     )
@@ -331,8 +331,8 @@ function generateOrderCancellationEmail(orderDetails) {
       (item) => `
         <tr>
             <td>${item.name}</td>
-            <td>${item.price}</td>
             <td>${item.quantity}</td>
+            <td>${item.price}</td>
         </tr>
         `
     )

@@ -81,6 +81,17 @@ const orderSchema = new Schema(
       default: 'Not processed',
       enum: ['Not processed', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
     },
+    deliveryDate: {
+      type: Date,
+    },
+    deliveryTimeSlot: {
+      type: String,
+      enum: ['11am to 1pm', '5pm to 7pm','Any time'],
+    },
+    isOrderForLater: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

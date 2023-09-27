@@ -1,6 +1,8 @@
 const Category = require('../models/category');
 const Item = require('../models/Item')
 // GET /api/categories
+const path = require('path');
+const fs = require('fs');
 module.exports.getCategories = async (req, res) => {
   try {
     const categories = await Category.find();
