@@ -67,6 +67,27 @@ exports.getTodayOrders = async (req, res) => {
 };
 
 
+exports.updateOrder = async (req, res) => {
+  try {
+    // Assuming you want to update the order based on its _id
+    const orderId = req.params.orderId;
+    const updatedOrder = req.body; // Assuming you're sending the updated order data in the request body
+console.log(req.body)
+    const order = await Order.findByIdAndUpdate(orderId, updatedOrder, {
+      new: true, // Return the updated order
+    });
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    return res.status(200).json({ message: 'Order updated successfully', order });
+  } catch (error) {
+    console.error('Error updating order:', error);
+    return res.status(500).json({ error: 'Failed to update order' });
+  }
+};
+
 
 // Controller function to cancel an order
 exports.cancelOrder = async (req, res) => {

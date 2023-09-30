@@ -6,8 +6,8 @@ const itemSchema = new mongoose.Schema({
   image: { type: String, required: true },
   quantityAndMrp: [
     {
-      quantity: { type: String, required: true },
-      numOfPieces: { type: Number, required: true },
+      quantity: { type: String},
+      numOfPieces: { type: Number },
       mrp: { type: Number, required: true },
     },
   ],

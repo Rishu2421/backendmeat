@@ -25,11 +25,11 @@ const orderSchema = new Schema(
         selectedQuantityAndMrp: {
         quantity: {
           type: String,
-          required: true,
+        
         },
         numOfPieces: {
           type: Number,
-          required: true,
+          
         },
         mrp: {
           type: Number,
@@ -45,6 +45,9 @@ const orderSchema = new Schema(
     amount: {
       type: Number,
       required: true,
+    },
+    discount:{
+      type:Number,
     },
     address: {
       type: String,
