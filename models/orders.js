@@ -48,6 +48,11 @@ const orderSchema = new Schema(
     },
     discount:{
       type:Number,
+      default: 0,
+    },
+    isDeliveryCharged:{
+      type: Boolean,
+      default: true,
     },
     address: {
       type: String,

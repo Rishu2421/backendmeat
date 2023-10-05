@@ -245,8 +245,8 @@ module.exports.cashOnDelivery = async (req, res) => {
       isOrderForLater, // New field for preorder
       deliveryDate, // New field for delivery date
       deliveryTimeSlot, 
-
-
+      isDeliveryCharged,
+      discount
     } = req.body;
 
     // ... Handle Cash On Delivery logic ...
@@ -281,6 +281,8 @@ module.exports.cashOnDelivery = async (req, res) => {
        isOrderForLater, // Include the isOrderForLater flag
       deliveryDate, // Include the delivery date
       deliveryTimeSlot, // Include the delivery time slot
+      isDeliveryCharged,
+      discount
     });
 
     // Remove purchased items from the user's cart
@@ -353,7 +355,7 @@ module.exports.cashOnDelivery = async (req, res) => {
         selectedQuantityAndMrp: item.selectedQuantityAndMrp,
       };
     }),
-
+ 
     orderAmount: order.amount,
     paymentType: 'Cash On Delivery',
     orderID: order._id,
